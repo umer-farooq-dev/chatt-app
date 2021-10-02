@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +46,9 @@ class LoginScreenState extends State<LoginScreen> {
               builder: (context) =>
                   HomeScreen(currentUserId: preferences.getString("id"))));
     }
+    this.setState(() {
+      isLoadning = false;
+    });
   }
 
   @override
@@ -160,6 +161,17 @@ class LoginScreenState extends State<LoginScreen> {
             "photoUrl", documentSnapshots[0]["photoUrl"]);
         await preferences.setString("aboutMe", documentSnapshots[0]["aboutMe"]);
       }
+
+      Fluttertoast.showToast(msg: "Cogratulations: SignIn sucessful..");
+      this.setState(() {
+        isLoadning = false;
+      });
+
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  HomeScreen(currentUserId: firebaseUser.uid)));
     }
 
     //SignIn Not Sucess.....
