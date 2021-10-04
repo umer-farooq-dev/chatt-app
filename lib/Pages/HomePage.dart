@@ -21,16 +21,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-
   TextEditingController searchTextEditingController = TextEditingController();
-  homePageHeader(){
+  homePageHeader() {
     return AppBar(
-      automaticallyImplyLeading: false,//remove the back button
+      automaticallyImplyLeading: false, //remove the back button
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.settings, size: 30.0, color: Colors.white,),
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Settings()));
+          icon: Icon(
+            Icons.settings,
+            size: 30.0,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Settings()));
           },
         ),
       ],
@@ -50,42 +54,33 @@ class HomeScreenState extends State<HomeScreen> {
               borderSide: BorderSide(color: Colors.white),
             ),
             filled: true,
-            prefixIcon: Icon(Icons.person_pin, color: Colors.white, size: 30.0,),
+            prefixIcon: Icon(
+              Icons.person_pin,
+              color: Colors.white,
+              size: 30.0,
+            ),
             suffixIcon: IconButton(
-              icon: Icon(Icons.clear, color: Colors.white,),
+              icon: Icon(
+                Icons.clear,
+                color: Colors.white,
+              ),
               onPressed: emptytextFormFiled,
             ),
           ),
-
         ),
       ),
     );
   }
-  emptytextFormFiled (){
-    searchTextEditingController.clear();
 
+  emptytextFormFiled() {
+    searchTextEditingController.clear();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: homePageHeader(),
-      body: RaisedButton.icon(
-          onPressed: logoutUser,
-          icon: Icon(Icons.close),
-          label: Text("Sign Out")),
     );
-  }
-
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-
-  Future<Null> logoutUser() async {
-    await FirebaseAuth.instance.signOut();
-    await googleSignIn.disconnect();
-    await googleSignIn.signOut();
-
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => MyApp()),
-        (Route<dynamic> route) => false);
   }
 }
 

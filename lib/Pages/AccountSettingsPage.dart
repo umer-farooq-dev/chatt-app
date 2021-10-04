@@ -47,6 +47,8 @@ class SettingsScreenState extends State<SettingsScreen> {
   String photoUrl = "";
   File imageFileAvatar;
   bool isLoading = false;
+  final FocusNode nickNameFocusMode = FocusNode();
+  final FocusNode aboutMeFocusMode = FocusNode();
 
   @override
   void initState() {
@@ -153,10 +155,128 @@ class SettingsScreenState extends State<SettingsScreen> {
                 width: double.infinity,
                 margin: EdgeInsets.all(20.0),
               ),
+              //Input Fields
+
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(1.0),
+                    child: isLoading ? circularProgress() : Container(),
+                  ),
+                  //usename
+                  Container(
+                    child: Text(
+                      "Profile Name :",
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.lightBlueAccent),
+                    ),
+                    margin: EdgeInsets.only(left: 10.0, bottom: 5.0, top: 10.0),
+                  ),
+                  Container(
+                    child: Theme(
+                      data: Theme.of(context)
+                          .copyWith(primaryColor: Colors.lightBlueAccent),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "e-g Umer Farooq",
+                          contentPadding: EdgeInsets.all(5.0),
+                          hintStyle: TextStyle(color: Colors.grey),
+                        ),
+                        controller: nickNameTextEditingController,
+                        onChanged: (value) {
+                          nickname = value;
+                        },
+                        focusNode: nickNameFocusMode,
+                      ),
+                    ),
+                    margin: EdgeInsets.only(left: 30.0, right: 30.0),
+                  ),
+
+                  //about me --user -Bio
+
+                  Container(
+                    child: Text(
+                      "About Me :",
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.lightBlueAccent),
+                    ),
+                    margin: EdgeInsets.only(left: 10.0, bottom: 5.0, top: 10.0),
+                  ),
+                  Container(
+                    child: Theme(
+                      data: Theme.of(context)
+                          .copyWith(primaryColor: Colors.lightBlueAccent),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Bio......",
+                          contentPadding: EdgeInsets.all(5.0),
+                          hintStyle: TextStyle(color: Colors.grey),
+                        ),
+                        controller: aboutMeTextEditingController,
+                        onChanged: (value) {
+                          aboutMe = value;
+                        },
+                        focusNode: aboutMeFocusMode,
+                      ),
+                    ),
+                    margin: EdgeInsets.only(left: 30.0, right: 30.0),
+                  ),
+                ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              //Buttons
+              Container(
+                child: FlatButton(
+                  child: Text(
+                    "Update",
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  color: Colors.lightBlueAccent,
+                  highlightColor: Colors.grey,
+                  splashColor: Colors.transparent,
+                  textColor: Colors.white,
+                  padding: EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 10.0),
+                ),
+                margin: EdgeInsets.only(top: 50.0, bottom: 1.0),
+              ),
+              //Logout Button
+
+              Padding(
+                padding: EdgeInsets.only(left: 50.0, right: 50.0),
+                child: RaisedButton(
+                  color: Colors.red,
+                  onPressed: logoutUser,
+                  child: Text(
+                    "Logout",
+                    style: TextStyle(color: Colors.white, fontSize: 14.0),
+                  ),
+                ),
+              ),
             ],
           ),
+          padding: EdgeInsets.only(left: 15.0, right: 15.0),
         ),
       ],
     );
+  }
+
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+
+  Future<Null> logoutUser() async {
+    await FirebaseAuth.instance.signOut();
+    await googleSignIn.disconnect();
+    await googleSignIn.signOut();
+
+    this.setState(() {
+      isLoading = false;
+    });
+
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => MyApp()),
+        (Route<dynamic> route) => false);
   }
 }
